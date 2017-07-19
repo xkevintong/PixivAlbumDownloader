@@ -1,0 +1,22 @@
+{
+  "manifest_version": 2,
+  "name": "Pixiv Album Downloader",
+  "version": "1.0",
+  "description": "Downloads entire albums of art from Pixiv",
+  "content_scripts": [
+    {
+      "matches": ["http://www.pixiv.net/*", "https://www.pixiv.net/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "background": {
+  "scripts": ["background.js"]
+	},
+  "browser_action": {
+  "default_icon": "icon.png"
+	},
+  "permissions": [
+    "downloads",
+    "tabs",
+    "activeTab"]
+}
