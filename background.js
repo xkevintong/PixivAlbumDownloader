@@ -16,10 +16,9 @@ chrome.runtime.onMessage.addListener(
     //console.log(request.url)
     if( request.message === "download" ) {
       chrome.downloads.download({
-      url: request.url
-      //saveAs: true
-      //filename: "/Pixiv Album Downloader"
-      });
+      url: request.url,
+      filename: "Pixiv Album Downloader/" + request.filename
+    });
 
     console.log("downloaded")
     }

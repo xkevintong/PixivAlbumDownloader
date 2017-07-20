@@ -7,10 +7,14 @@ chrome.runtime.onMessage.addListener(
     	albumSize = document.evaluate('/html/body/nav/div[1]/span[2]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
 
       // Edit first page URL to download url
-      firstPageDL = firstPage.replace("img-master", "img-original").replace("_master1200.jpg", ".png")
+      firstPageDL = firstPage.replace("img-master", "img-original").replace("_master1200.jpg", ".png");
+
+      // Find first page image name
+      firstImage = firstPageDL.substr(firstPageDL.lastIndexOf('/') + 1);
 
       console.log(firstPage);
       console.log(firstPageDL);
+      console.log(firstImage);
       //console.log(albumSize);
 
       // Send album info to download
@@ -23,8 +27,8 @@ chrome.runtime.onMessage.addListener(
       xhr.addEventListener('load', (e) => {
           chrome.runtime.sendMessage({
             message: "download",
-            url: URL.createObjectURL(xhr.response)
-            //filename: message.url.substr(message.url.lastIndexOf('/') + 1),
+            url: URL.createObjectURL(xhr.response),
+            filename: firstImage
             //saveAs: message.saveAs,
           });
       });
