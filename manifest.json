@@ -18,5 +18,7 @@
   "permissions": [
     "downloads",
     "tabs",
-    "activeTab"]
+    "activeTab",
+    "http://*/",
+    "https://*/"]
 }

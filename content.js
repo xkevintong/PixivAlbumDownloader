@@ -14,7 +14,23 @@ chrome.runtime.onMessage.addListener(
       //console.log(albumSize);
 
       // Send album info to download
-      chrome.runtime.sendMessage({"message": "download", "url": firstPageDL, "pages": albumSize});
+      //chrome.runtime.sendMessage({"message": "download", "url": firstPageDL, "pages": albumSize});
+
+      // Perform XHR workaround
+      var xhr = new XMLHttpRequest();
+      xhr.responseType = "blob";
+
+      xhr.addEventListener('load', (e) => {
+          chrome.runtime.sendMessage({
+            message: "download",
+            url: URL.createObjectURL(xhr.response)
+            //filename: message.url.substr(message.url.lastIndexOf('/') + 1),
+            //saveAs: message.saveAs,
+          });
+      });
+
+      xhr.open('get', firstPageDL, true);
+      xhr.send();
     }
   }
 );
