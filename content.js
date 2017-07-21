@@ -7,16 +7,16 @@ chrome.runtime.onMessage.addListener(
     	var albumSize = document.evaluate('/html/body/nav/div[1]/span[2]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
 
       // Edit first page URL to download url
-      var firstPageDL = firstPage.replace("img-master", "img-original").replace("_master1200.jpg", ".png");
+      var firstPageURL = firstPage.replace("img-master", "img-original").replace("_master1200.jpg", ".png");
 
       // Find album ID
-      var albumID = firstPageDL.substr(firstPageDL.lastIndexOf('/') + 1).replace("_p0", "_p");
+      var albumID = firstPageURL.substr(firstPageURL.lastIndexOf('/') + 1).replace("_p0", "_p");
 
       // Perform XHR workaround
       var xhr = new XMLHttpRequest();
       xhr.responseType = "blob";
 
-      xhr.addEventListener('load', (e) => {
+      xhr.addEventListener('load', () => {
           chrome.runtime.sendMessage({
             message: "download",
             url: URL.createObjectURL(xhr.response),
@@ -24,8 +24,11 @@ chrome.runtime.onMessage.addListener(
           });
       });
 
-      xhr.open('get', firstPageDL, true);
-      xhr.send();
+      for (var page = 0; page < albumSize; page++) {
+        //console.log(firstPageURL.replace("_p0", "_p" + page));
+        xhr.open('GET', firstPageURL.replace("_p0", "_p" + page), true);
+        xhr.send();
+      } 
     }
   }
 );
