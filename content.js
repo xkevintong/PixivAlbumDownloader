@@ -12,22 +12,23 @@ chrome.runtime.onMessage.addListener(
       // Find album ID
       var albumID = firstPageURL.substr(firstPageURL.lastIndexOf('/') + 1).replace("_p0", "_p");
 
-      // Perform XHR workaround
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = "blob";
-
-      xhr.addEventListener('load', () => {
-          chrome.runtime.sendMessage({
-            message: "download",
-            url: URL.createObjectURL(xhr.response),
-            filename: albumID.replace("_p", "_p0")
-          });
-      });
-
+      var xhr = [];
       for (var page = 0; page < albumSize; page++) {
-        //console.log(firstPageURL.replace("_p0", "_p" + page));
-        xhr.open('GET', firstPageURL.replace("_p0", "_p" + page), true);
-        xhr.send();
+        (function(page) {
+          xhr[page] = new XMLHttpRequest();
+          xhr[page].responseType = "blob";
+
+          xhr[page].addEventListener('load', () => {
+            chrome.runtime.sendMessage({
+              message: "download",
+              url: URL.createObjectURL(xhr[page].response),
+              filename: albumID.replace("_p", "_p" + page)
+            });
+          });
+
+          xhr[page].open('GET', firstPageURL.replace("_p0", "_p" + page), true);
+          xhr[page].send();
+        })(page);
       } 
     }
   }
