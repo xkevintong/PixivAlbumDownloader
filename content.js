@@ -6,6 +6,18 @@ chrome.runtime.onMessage.addListener(
     	var firstPage = document.evaluate('//*[@id="main"]/section/div[1]/img', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
     	var albumSize = document.evaluate('/html/body/nav/div[1]/span[2]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
 
+      // Check album to see if images are jpg or png
+      var firstImage = new XMLHttpRequest();
+      firstImage.responseType = "document";
+      firstImage.open('GET', document.evaluate('//*[@id="main"]/section/div[1]/a', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href, true);
+      firstImage.send();
+
+      var imageFormat;
+      firstImage.onload = function () {
+        var firstImageURL = this.responseXML.evaluate('/html/body/img', this.responseXML, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
+        imageFormat = firstImageURL.substr(firstImageURL.lastIndexOf('.'));
+      }
+
       // Edit first page URL to download url
       var firstPageURL = firstPage.replace("img-master", "img-original").replace("_master1200.jpg", ".png");
 
