@@ -30,13 +30,13 @@ chrome.runtime.onMessage.addListener(
           xhr[page] = new XMLHttpRequest();
           xhr[page].responseType = "blob";
 
-          xhr[page].addEventListener('load', () => {
+          xhr[page].onload = function () {
             chrome.runtime.sendMessage({
               message: "download",
               url: URL.createObjectURL(xhr[page].response),
               filename: albumID.replace("_p", "_p" + page)
             });
-          });
+          }
 
           xhr[page].open('GET', firstPageURL.replace("_p0", "_p" + page), true);
           xhr[page].send();
