@@ -12,19 +12,18 @@ chrome.runtime.onMessage.addListener(
       firstImage.open('GET', document.evaluate('//*[@id="main"]/section/div[1]/a', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href, true);
       firstImage.send();
 
-      var firstPageURL, albumID;
       firstImage.onload = function () {
+        // Get image format of the album from first image
         var firstImageURL = this.responseXML.evaluate('/html/body/img', this.responseXML, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
         var imageFormat = firstImageURL.substr(firstImageURL.lastIndexOf('.'));
 
         // Edit first page URL to download url
-        firstPageURL = firstPage.replace("img-master", "img-original").replace("_master1200.jpg", imageFormat);
-        console.log(firstImageURL)
+        var firstPageURL = firstPage.replace("img-master", "img-original").replace("_master1200.jpg", imageFormat);
 
         // Find album ID
-        albumID = firstPageURL.substr(firstPageURL.lastIndexOf('/') + 1).replace("_p0" + imageFormat, "_p");
-        console.log(albumID)
+        var albumID = firstPageURL.substr(firstPageURL.lastIndexOf('/') + 1).replace("_p0" + imageFormat, "_p");
 
+        // Download all images with XHR blobs
         var xhr = [];
         for (var page = 0; page < albumSize; page++) {
           (function(page) {
