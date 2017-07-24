@@ -24,10 +24,9 @@ chrome.runtime.onMessage.addListener(
         var albumID = firstPageURL.substr(firstPageURL.lastIndexOf('/') + 1).replace("_p0" + imageFormat, "_p");
 
         // Download all images with XHR blobs
-        //var xhr = [];
         for (var page = 0; page < albumSize; page++) {
           (function(page) {
-            let xhr = new XMLHttpRequest();
+            var xhr = new XMLHttpRequest();
             xhr.responseType = "blob";
 
             xhr.onload = function () {

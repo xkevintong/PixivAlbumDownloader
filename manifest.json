@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "Pixiv Album Downloader",
-  "version": "1.0",
-  "description": "Downloads entire albums of art from Pixiv",
+  "version": "1.0.0",
+  "description": "Downloads the entire album of art from the Pixiv album page.",
   "content_scripts": [
     {
       "matches": ["http://www.pixiv.net/*", "https://www.pixiv.net/*"],
@@ -10,10 +10,10 @@
     }
   ],
   "background": {
-  "scripts": ["background.js"]
+    "scripts": ["background.js"]
 	},
   "browser_action": {
-  "default_icon": "icon.png"
+    "default_icon": "megumin.png"
 	},
   "permissions": [
     "downloads",
