@@ -12,36 +12,38 @@ chrome.runtime.onMessage.addListener(
       firstImage.open('GET', document.evaluate('//*[@id="main"]/section/div[1]/a', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href, true);
       firstImage.send();
 
-      var imageFormat;
+      var firstPageURL, albumID;
       firstImage.onload = function () {
         var firstImageURL = this.responseXML.evaluate('/html/body/img', this.responseXML, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
-        imageFormat = firstImageURL.substr(firstImageURL.lastIndexOf('.'));
+        var imageFormat = firstImageURL.substr(firstImageURL.lastIndexOf('.'));
+
+        // Edit first page URL to download url
+        firstPageURL = firstPage.replace("img-master", "img-original").replace("_master1200.jpg", imageFormat);
+        console.log(firstImageURL)
+
+        // Find album ID
+        albumID = firstPageURL.substr(firstPageURL.lastIndexOf('/') + 1).replace("_p0" + imageFormat, "_p");
+        console.log(albumID)
+
+        var xhr = [];
+        for (var page = 0; page < albumSize; page++) {
+          (function(page) {
+            xhr[page] = new XMLHttpRequest();
+            xhr[page].responseType = "blob";
+
+            xhr[page].onload = function () {
+              chrome.runtime.sendMessage({
+                message: "download",
+                url: URL.createObjectURL(xhr[page].response),
+                filename: albumID + page + imageFormat
+              });
+            }
+
+            xhr[page].open('GET', firstPageURL.replace("_p0", "_p" + page), true);
+            xhr[page].send();
+          })(page);
+        }
       }
-
-      // Edit first page URL to download url
-      var firstPageURL = firstPage.replace("img-master", "img-original").replace("_master1200.jpg", ".png");
-
-      // Find album ID
-      var albumID = firstPageURL.substr(firstPageURL.lastIndexOf('/') + 1).replace("_p0", "_p");
-
-      var xhr = [];
-      for (var page = 0; page < albumSize; page++) {
-        (function(page) {
-          xhr[page] = new XMLHttpRequest();
-          xhr[page].responseType = "blob";
-
-          xhr[page].onload = function () {
-            chrome.runtime.sendMessage({
-              message: "download",
-              url: URL.createObjectURL(xhr[page].response),
-              filename: albumID.replace("_p", "_p" + page)
-            });
-          }
-
-          xhr[page].open('GET', firstPageURL.replace("_p0", "_p" + page), true);
-          xhr[page].send();
-        })(page);
-      } 
     }
   }
 );
