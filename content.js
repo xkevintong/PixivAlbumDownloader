@@ -24,22 +24,22 @@ chrome.runtime.onMessage.addListener(
         var albumID = firstPageURL.substr(firstPageURL.lastIndexOf('/') + 1).replace("_p0" + imageFormat, "_p");
 
         // Download all images with XHR blobs
-        var xhr = [];
+        //var xhr = [];
         for (var page = 0; page < albumSize; page++) {
           (function(page) {
-            xhr[page] = new XMLHttpRequest();
-            xhr[page].responseType = "blob";
+            let xhr = new XMLHttpRequest();
+            xhr.responseType = "blob";
 
-            xhr[page].onload = function () {
+            xhr.onload = function () {
               chrome.runtime.sendMessage({
                 message: "download",
-                url: URL.createObjectURL(xhr[page].response),
+                url: URL.createObjectURL(this.response),
                 filename: albumID + page + imageFormat
               });
             }
 
-            xhr[page].open('GET', firstPageURL.replace("_p0", "_p" + page), true);
-            xhr[page].send();
+            xhr.open('GET', firstPageURL.replace("_p0", "_p" + page), true);
+            xhr.send();
           })(page);
         }
       }
