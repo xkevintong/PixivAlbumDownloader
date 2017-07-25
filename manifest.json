@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Pixiv Album Downloader",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Downloads the entire album of art from the Pixiv album page.",
   "icons": { "48": "megumin-48.png",
             "128": "megumin-128.png"},
@@ -21,6 +21,6 @@
     "downloads",
     "tabs",
     "activeTab",
-    "http://*/",
-    "https://*/"]
+    "https://www.pixiv.net/*",
+    "https://i.pximg.net/*"]
 }
