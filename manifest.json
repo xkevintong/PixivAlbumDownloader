@@ -7,7 +7,7 @@
             "128": "megumin-128.png"},
   "content_scripts": [
     {
-      "matches": ["http://www.pixiv.net/*", "https://www.pixiv.net/*"],
+      "matches": ["https://www.pixiv.net/*"],
       "js": ["content.js"]
     }
   ],
