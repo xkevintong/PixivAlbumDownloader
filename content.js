@@ -6,7 +6,7 @@ chrome.runtime.onMessage.addListener(
     	var firstPage = document.evaluate('//*[@id="main"]/section/div[1]/img', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
     	var albumSize = document.evaluate('/html/body/nav/div[1]/span[2]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
 
-      // Check album to see if images are jpg or png
+      // Check first image in album to see if it is in jpg or png format, and assume entire album is as well
       var firstImage = new XMLHttpRequest();
       firstImage.responseType = "document";
       firstImage.open('GET', document.evaluate('//*[@id="main"]/section/div[1]/a', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href, true);
@@ -28,7 +28,10 @@ chrome.runtime.onMessage.addListener(
           (function(page) {
             var xhr = new XMLHttpRequest();
             xhr.responseType = "blob";
+            xhr.open('GET', firstPageURL.replace("_p0", "_p" + page), true);
+            xhr.send();
 
+            // Assign blob response a URL and send message to background.js to download blob
             xhr.onload = function () {
               chrome.runtime.sendMessage({
                 message: "download",
@@ -36,9 +39,6 @@ chrome.runtime.onMessage.addListener(
                 filename: albumID + page + imageFormat
               });
             }
-
-            xhr.open('GET', firstPageURL.replace("_p0", "_p" + page), true);
-            xhr.send();
           })(page);
         }
       }
