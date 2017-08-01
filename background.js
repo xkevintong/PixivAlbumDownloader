@@ -13,9 +13,17 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if( request.message === "download" ) {
-        chrome.downloads.download({
-        url: request.url,
-        filename: "Pixiv Album Downloader/" + request.filename
+        chrome.storage.sync.get('subfolder', function(item) {
+          // Add backslash for subfolder path if there is one
+          if (item.subfolder != "") {
+            item.subfolder = item.subfolder + "/";
+          }
+
+          // Download image
+          chrome.downloads.download({
+          url: request.url,
+          filename: item.subfolder + request.filename
+        });
       });
     }
   }
