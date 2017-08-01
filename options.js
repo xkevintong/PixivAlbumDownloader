@@ -13,12 +13,9 @@ function save_options() {
   });
 }
 
-// Restores select box and checkbox state using the preferences stored in chrome.storage.
+// Restores options state using the preferences stored in chrome.storage.
 function restore_options() {
-  // Use default value subfolder = "Pixiv Album Downloader" and zip = false.
-  chrome.storage.sync.get({
-    subfolder: "Pixiv Album Downloader"
-  }, function(items) {
+  chrome.storage.sync.get('subfolder', function(items) {
     document.getElementById('subfolder').value = items.subfolder;
   });
 }
