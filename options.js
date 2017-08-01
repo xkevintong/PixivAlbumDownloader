@@ -1,10 +1,8 @@
 // Saves options to chrome.storage.sync.
 function save_options() {
   var subfolder = document.getElementById('subfolder').value;
-  var zip = document.getElementById('zip').checked;
   chrome.storage.sync.set({
-    subfolder: subfolder,
-    zip: zip
+    subfolder: subfolder
   }, function() {
     // Update status to let user know options were saved.
     var status = document.getElementById('status');
@@ -19,11 +17,9 @@ function save_options() {
 function restore_options() {
   // Use default value subfolder = "Pixiv Album Downloader" and zip = false.
   chrome.storage.sync.get({
-    subfolder: "Pixiv Album Downloader",
-    zip: false
+    subfolder: "Pixiv Album Downloader"
   }, function(items) {
     document.getElementById('subfolder').value = items.subfolder;
-    document.getElementById('zip').checked = items.zip;
   });
 }
 
