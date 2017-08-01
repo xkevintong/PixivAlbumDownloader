@@ -1,26 +1,43 @@
 {
   "manifest_version": 2,
   "name": "Pixiv Album Downloader",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Downloads the entire album of art from the Pixiv album page.",
-  "icons": { "48": "megumin-48.png",
-            "128": "megumin-128.png"},
+
+  "icons": {
+    "48": "megumin-48.png",
+    "128": "megumin-128.png"
+  },
+
+  "options_ui": {
+    "page": "options.html",
+    "chrome_style": true
+  },
+
   "content_scripts": [
     {
       "matches": ["https://www.pixiv.net/*"],
       "js": ["content.js"]
     }
   ],
+
   "background": {
-    "scripts": ["background.js"]
+    "scripts": [
+      "background.js",
+      "options.js"
+    ]
 	},
+
   "browser_action": {
     "default_icon": "megumin-128.png"
 	},
+
   "permissions": [
     "downloads",
     "tabs",
     "activeTab",
+    "storage",
     "https://www.pixiv.net/*",
-    "https://i.pximg.net/*"]
+    "https://i.pximg.net/*"
+  ]
 }
