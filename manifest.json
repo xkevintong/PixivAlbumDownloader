@@ -16,7 +16,7 @@
 
   "content_scripts": [
     {
-      "matches": ["https://www.pixiv.net/*"],
+      "matches": ["*://www.pixiv.net/*"],
       "js": ["content.js"]
     }
   ],
