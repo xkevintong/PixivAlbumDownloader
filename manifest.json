@@ -37,7 +37,7 @@
     "tabs",
     "activeTab",
     "storage",
-    "https://www.pixiv.net/*",
-    "https://i.pximg.net/*"
+    "*://www.pixiv.net/*",
+    "*://i.pximg.net/*"
   ]
 }
