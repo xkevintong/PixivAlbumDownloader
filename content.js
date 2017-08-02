@@ -38,10 +38,10 @@ chrome.runtime.onMessage.addListener(
                 url: URL.createObjectURL(this.response),
                 filename: albumID + page + imageFormat
               });
-            }
-          })(page);
+            };
+          }(page));
         }
-      }
+      };
     }
   }
 );
