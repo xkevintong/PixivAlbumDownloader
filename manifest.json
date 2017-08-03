@@ -28,15 +28,16 @@
     ]
 	},
 
-  "browser_action": {
+  "page_action": {
     "default_icon": "megumin-128.png"
-	},
+  },
 
   "permissions": [
-    "downloads",
-    "tabs",
     "activeTab",
+    "declarativeContent",
+    "downloads",
     "storage",
+    "tabs",
     "*://www.pixiv.net/*",
     "*://i.pximg.net/*"
   ]

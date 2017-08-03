@@ -1,7 +1,7 @@
 // background.js
 
-// Called when the user clicks on the browser action.
-chrome.browserAction.onClicked.addListener(
+// Called when the user clicks on the page action (extension icon).
+chrome.pageAction.onClicked.addListener(
   function(tab) {
   // Send a message to the active tab
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
@@ -39,4 +39,24 @@ chrome.runtime.onInstalled.addListener(
         });
       }
     });
-});
+  }
+);
+
+// Enables the extension only on pixiv.net pages by showing page action
+chrome.runtime.onInstalled.addListener(
+  function() {
+    chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
+      chrome.declarativeContent.onPageChanged.addRules([{
+        conditions: [
+          new chrome.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              hostEquals: "www.pixiv.net",
+              schemes: ["http", "https"]
+            },
+          })
+        ],
+        actions: [new chrome.declarativeContent.ShowPageAction()]
+      }]);
+    });
+  }
+);
