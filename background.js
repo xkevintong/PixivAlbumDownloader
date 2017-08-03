@@ -49,9 +49,10 @@ chrome.runtime.onInstalled.addListener(
       chrome.declarativeContent.onPageChanged.addRules([{
         conditions: [
           new chrome.declarativeContent.PageStateMatcher({
-            pageUrl: {
+            pageUrl: {              
+              schemes: ["http", "https"],
               hostEquals: "www.pixiv.net",
-              schemes: ["http", "https"]
+              queryContains: "manga&"
             },
           })
         ],
