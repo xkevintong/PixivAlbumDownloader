@@ -40,5 +40,14 @@
     "tabs",
     "*://www.pixiv.net/*",
     "*://i.pximg.net/*"
-  ]
+  ],
+
+  "commands": {
+    "_execute_page_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+V",
+        "mac": "Command+Shift+V"
+      }
+    }
+  } 
 }
