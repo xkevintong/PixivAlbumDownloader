@@ -42,7 +42,7 @@ chrome.runtime.onInstalled.addListener(
   }
 );
 
-// Enables the extension only on pixiv.net pages by showing page action
+// Enables the extension only on pixiv.net album pages by showing page action
 chrome.runtime.onInstalled.addListener(
   function() {
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {

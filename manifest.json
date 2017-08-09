@@ -5,31 +5,31 @@
   "description": "Downloads an entire album of art from a Pixiv album page.",
 
   "icons": {
-    "48": "megumin-48.png",
-    "128": "megumin-128.png"
+    "48": "icons/megumin-48.png",
+    "128": "icons/megumin-128.png"
   },
 
   "options_ui": {
-    "page": "options.html",
+    "page": "src/options.html",
     "chrome_style": true
   },
 
   "content_scripts": [
     {
       "matches": ["*://www.pixiv.net/*"],
-      "js": ["content.js"]
+      "js": ["src/content.js"]
     }
   ],
 
   "background": {
     "scripts": [
-      "background.js",
-      "options.js"
+      "src/background.js",
+      "src/options.js"
     ]
 	},
 
   "page_action": {
-    "default_icon": "megumin-128.png"
+    "default_icon": "icons/megumin-128.png"
   },
 
   "permissions": [
