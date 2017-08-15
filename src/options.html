@@ -3,16 +3,16 @@
 <head>
   <style>
     body: { padding: 10px; }
+    .button { margin: 10px 2px 1px; }
   </style>
 </head>
 
 <body>
-  <p>
-    Subfolder name:
-      <input type="textbox" id="subfolder" value="">
-  </p>
+  <label for="folderName">Subfolder:</label>
+  <input type="checkbox" id="folderCheck">
+  <input type="textbox" id="folderName">
   <div id="status"></div>
-  <button id="save">Save</button>
+  <button class="button" id="save">Save</button>
   <script src="options.js"></script>
 </body>
 </html>
