@@ -14,16 +14,23 @@ chrome.pageAction.onClicked.addListener(
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if( request.message === "download" ) {
-        chrome.storage.sync.get('subfolder', function(item) {
+        chrome.storage.sync.get(['isSubfolder', 'subfolder'], function(items) {
+          var subfolder = items.subfolder;
+
           // Add backslash for subfolder path if there is one
-          if (item.subfolder != "") {
-            item.subfolder = item.subfolder + "/";
+          if (subfolder != "") {
+            subfolder = subfolder + "/";
+          }
+
+          // Remove subfolder if checkbox is not checked
+          if (!items.isSubfolder) {
+            subfolder = "";
           }
 
           // Download image
           chrome.downloads.download({
           url: request.url,
-          filename: item.subfolder + request.filename
+          filename: subfolder + request.filename
       });
     });
   }

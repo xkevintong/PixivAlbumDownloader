@@ -23,17 +23,19 @@ function save_confirm() {
 function save_options() {
   var folderCheck = document.getElementById('folderCheck').checked;
   var folderName = document.getElementById('folderName').value;
-  chrome.storage.sync.set({
-    isSubfolder: folderCheck,
-    subfolder: folderName
-  }, function() {
-    // Update status to let user know options were saved.
-    var status = document.getElementById('status');
-    status.textContent = 'Options saved.';
-    setTimeout(function() {
-      status.textContent = '';
-    }, 800);
-  });
+  // Save checked checkbox and subfolder name
+  if (folderCheck) {
+    chrome.storage.sync.set({
+      isSubfolder: folderCheck,
+      subfolder: folderName
+    }, save_confirm);
+  }
+  // Don't save folderName if subfolder is not checked
+  else {
+    chrome.storage.sync.set({
+      isSubfolder: folderCheck
+    }, save_confirm);
+  }
 }
 
 // Restores options state using the preferences stored in chrome.storage.
@@ -45,5 +47,5 @@ function restore_options() {
 }
 
 document.addEventListener('DOMContentLoaded', restore_options);
-document.getElementById('save').addEventListener('click',
-    save_options);
+document.getElementById('folderCheck').addEventListener('click', subfolder_options);
+document.getElementById('save').addEventListener('click', save_options);
