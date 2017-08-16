@@ -1,3 +1,24 @@
+// Disables subfolder text box when subfolder checkbox is not checked
+function subfolder_options() {
+  var folderCheck = document.getElementById('folderCheck').checked;
+  var folderBox = document.getElementById('folderName');
+  if (folderCheck) {
+    folderBox.disabled = false;
+  }
+  else {
+    folderBox.disabled = true;
+  }
+}
+
+// Update status to let user know options were saved.
+function save_confirm() {
+  var status = document.getElementById('status');
+  status.textContent = 'Options saved.';
+  setTimeout(function() {
+    status.textContent = '';
+  }, 800);
+}
+
 // Saves options to chrome.storage.sync.
 function save_options() {
   var folderCheck = document.getElementById('folderCheck').checked;
