@@ -17,14 +17,14 @@ chrome.runtime.onMessage.addListener(
         chrome.storage.sync.get(['isSubfolder', 'subfolder'], function(items) {
           var subfolder = items.subfolder;
 
-          // Add backslash for subfolder path if there is one
-          if (subfolder != "") {
-            subfolder = subfolder + "/";
-          }
-
           // Remove subfolder if checkbox is not checked
           if (!items.isSubfolder) {
             subfolder = "";
+          }
+
+          // Add backslash for subfolder path if there is one
+          else if (subfolder) {
+            subfolder = subfolder + "/";
           }
 
           // Download image
@@ -42,6 +42,7 @@ chrome.runtime.onInstalled.addListener(
     chrome.storage.sync.get('subfolder', function(item) {
       if (item.subfolder === undefined) {
         chrome.storage.sync.set({
+          isSubfolder: true,
           subfolder: "Pixiv Album Downloader"
         });
       }

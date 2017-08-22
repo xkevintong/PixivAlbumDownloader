@@ -36,6 +36,7 @@
     "activeTab",
     "declarativeContent",
     "downloads",
+    "notifications",
     "storage",
     "tabs",
     "*://www.pixiv.net/*",

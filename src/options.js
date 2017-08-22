@@ -10,31 +10,36 @@ function subfolder_options() {
   }
 }
 
-// Update status to let user know options were saved.
-function save_confirm() {
-  var status = document.getElementById('status');
-  status.textContent = 'Options saved.';
-  setTimeout(function() {
-    status.textContent = '';
-  }, 800);
+function send_notice(notice) {
+    chrome.notifications.create({
+    type: "basic",
+    iconUrl: "../icons/megumin-128.png",
+    title: "Pixiv Album Downloader",
+    message: notice
+  });
 }
 
 // Saves options to chrome.storage.sync.
 function save_options() {
   var folderCheck = document.getElementById('folderCheck').checked;
   var folderName = document.getElementById('folderName').value;
+
+  // Don't save folderName if subfolder is not checked
+  if (!folderCheck) {
+    chrome.storage.sync.set({
+      isSubfolder: folderCheck
+    }, send_notice("Images will be downloaded to the Downloads folder."));
+  }
+  // Check to make sure there is a subfolder name
+  else if (!folderName) {
+    send_notice("Please enter a subfolder name.");
+  }
   // Save checked checkbox and subfolder name
-  if (folderCheck) {
+  else {
     chrome.storage.sync.set({
       isSubfolder: folderCheck,
       subfolder: folderName
-    }, save_confirm);
-  }
-  // Don't save folderName if subfolder is not checked
-  else {
-    chrome.storage.sync.set({
-      isSubfolder: folderCheck
-    }, save_confirm);
+    }, send_notice("Images will be downloaded to Downloads/" + folderName));    
   }
 }
 
