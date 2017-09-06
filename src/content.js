@@ -60,7 +60,7 @@ function download_album() {
 
 function download_image() {
   // Get source image url and id
-  var imageURL = document.evaluate('//*[@id="wrapper"]/div[2]/div/img', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
+  var imageURL = document.evaluate('//*[@id="wrapper"]/div[2]/div/img', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.getAttribute('data-src');
   var imageID = imageURL.substr(imageURL.lastIndexOf('/'));
 
   var xhr = new XMLHttpRequest();
@@ -76,5 +76,4 @@ function download_image() {
       filename: imageID
     });
   };
-
 }
