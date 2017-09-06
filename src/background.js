@@ -63,12 +63,21 @@ chrome.runtime.onInstalled.addListener(
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
       chrome.declarativeContent.onPageChanged.addRules([{
         conditions: [
+          // Match albums
           new chrome.declarativeContent.PageStateMatcher({
             pageUrl: {              
               schemes: ["http", "https"],
               hostEquals: "www.pixiv.net",
               queryContains: "manga&"
-            },
+            }
+          }),
+          // Match images
+          new chrome.declarativeContent.PageStateMatcher({
+            pageUrl: {              
+              schemes: ["http", "https"],
+              hostEquals: "www.pixiv.net",
+              queryContains: "medium&"
+            }
           })
         ],
         actions: [new chrome.declarativeContent.ShowPageAction()]

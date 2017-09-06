@@ -59,5 +59,22 @@ function download_album() {
 }
 
 function download_image() {
-  
+  // Get source image url and id
+  var imageURL = document.evaluate('//*[@id="wrapper"]/div[2]/div/img', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
+  var imageID = imageURL.substr(imageURL.lastIndexOf('/'));
+
+  var xhr = new XMLHttpRequest();
+  xhr.responseType = "blob";
+  xhr.open('GET', imageURL, true);
+  xhr.send();
+
+  // Assign blob response a URL and send message to background.js to download blob
+  xhr.onload = function () {
+    chrome.runtime.sendMessage({
+      message: "download",
+      url: URL.createObjectURL(this.response),
+      filename: imageID
+    });
+  };
+
 }
