@@ -6,7 +6,14 @@ chrome.pageAction.onClicked.addListener(
   // Send a message to the active tab
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     var activeTab = tabs[0];
-    chrome.tabs.sendMessage(activeTab.id, {message: "clicked_browser_action"});
+
+    // Check if downloading single image or album
+    if (activeTab.url.includes("mode=medium&")) {
+      chrome.tabs.sendMessage(activeTab.id, {message: "image"});
+    }
+    else if (activeTab.url.includes("mode=manga&")) {
+      chrome.tabs.sendMessage(activeTab.id, {message: "album"});
+    }
   });
 });
 
