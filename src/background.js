@@ -7,12 +7,15 @@ chrome.pageAction.onClicked.addListener(
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     var activeTab = tabs[0];
 
-    // Check if downloading single image or album
+    // Check if downloading single image, album, or artist page
     if (activeTab.url.includes("mode=medium&")) {
       chrome.tabs.sendMessage(activeTab.id, {message: "image"});
     }
     else if (activeTab.url.includes("mode=manga&")) {
       chrome.tabs.sendMessage(activeTab.id, {message: "album"});
+    }
+    else if (activeTab.url.includes("php?id")) {
+      chrome.tabs.sendMessage(activeTab.id, {message: "artist"});
     }
   });
 });
@@ -77,6 +80,14 @@ chrome.runtime.onInstalled.addListener(
               schemes: ["http", "https"],
               hostEquals: "www.pixiv.net",
               queryContains: "medium&"
+            }
+          }),
+          // Match artist page
+          new chrome.declarativeContent.PageStateMatcher({
+            pageUrl: {              
+              schemes: ["http", "https"],
+              hostEquals: "www.pixiv.net",
+              urlContains: "php?id"
             }
           })
         ],

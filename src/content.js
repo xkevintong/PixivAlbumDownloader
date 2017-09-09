@@ -6,6 +6,10 @@ chrome.runtime.onMessage.addListener(
         download_album();
         break;
 
+      case "artist":
+        download_artist();
+        break;
+
       case "image":
         download_image();
         break;
@@ -17,13 +21,16 @@ chrome.runtime.onMessage.addListener(
 
 function download_album() {
   // Get album size and first page with XPath
-  var firstPage = document.evaluate('//*[@id="main"]/section/div[1]/img', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
-  var albumSize = document.evaluate('/html/body/nav/div[1]/span[2]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
+  var firstPage = document.evaluate('//*[@id="main"]/section/div[1]/img',
+    document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
+  var albumSize = document.evaluate('/html/body/nav/div[1]/span[2]',
+    document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
 
   // Check first image in album to see if it is in jpg or png format, and assume entire album is as well
   var firstImage = new XMLHttpRequest();
   firstImage.responseType = "document";
-  firstImage.open('GET', document.evaluate('//*[@id="main"]/section/div[1]/a', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href, true);
+  firstImage.open('GET', document.evaluate('//*[@id="main"]/section/div[1]/a',
+    document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href, true);
   firstImage.send();
 
   firstImage.onload = function () {
@@ -60,7 +67,8 @@ function download_album() {
 
 function download_image() {
   // Get source image url and id
-  var imageURL = document.evaluate('//*[@id="wrapper"]/div[2]/div/img', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.getAttribute('data-src');
+  var imageURL = document.evaluate('//*[@id="wrapper"]/div[2]/div/img',
+    document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.getAttribute('data-src');
   var imageID = imageURL.substr(imageURL.lastIndexOf('/'));
 
   var xhr = new XMLHttpRequest();
@@ -76,4 +84,14 @@ function download_image() {
       filename: imageID
     });
   };
+}
+
+function download_artist() {
+  // Get snapshot of image/album links from the page
+  var snapshot = document.evaluate('//*[@id="wrapper"]/div[1]/div[1]/div/div[4]/ul/li/a[h1]',
+    document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+
+  for (var i = 0; i < snapshot.snapshotLength; i++) {
+    console.log(snapshot.snapshotItem(i).href);
+  }
 }
