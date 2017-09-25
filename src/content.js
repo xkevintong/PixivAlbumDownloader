@@ -3,7 +3,7 @@ chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     switch (request.message) {
       case "album":      
-        download_album();
+        download_album(document);
         break;
 
       case "artist":
@@ -11,7 +11,7 @@ chrome.runtime.onMessage.addListener(
         break;
 
       case "image":
-        download_image();
+        download_image(document);
         break;
 
       default:
@@ -19,18 +19,18 @@ chrome.runtime.onMessage.addListener(
   }
 );
 
-function download_album() {
+function download_album(doc) {
   // Get album size and first page with XPath
-  var firstPage = document.evaluate('//*[@id="main"]/section/div[1]/img',
-    document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
-  var albumSize = document.evaluate('/html/body/nav/div[1]/span[2]',
-    document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
+  var firstPage = doc.evaluate('//*[@id="main"]/section/div[1]/img',
+    doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
+  var albumSize = doc.evaluate('/html/body/nav/div[1]/span[2]',
+    doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
 
   // Check first image in album to see if it is in jpg or png format, and assume entire album is as well
   var firstImage = new XMLHttpRequest();
   firstImage.responseType = "document";
-  firstImage.open('GET', document.evaluate('//*[@id="main"]/section/div[1]/a',
-    document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href, true);
+  firstImage.open('GET', doc.evaluate('//*[@id="main"]/section/div[1]/a',
+    doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href, true);
   firstImage.send();
 
   firstImage.onload = function () {
@@ -65,10 +65,10 @@ function download_album() {
   };
 }
 
-function download_image() {
+function download_image(doc) {
   // Get source image url and id
-  var imageURL = document.evaluate('//*[@id="wrapper"]/div[2]/div/img',
-    document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.getAttribute('data-src');
+  var imageURL = doc.evaluate('//*[@id="wrapper"]/div[2]/div/img',
+    doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.getAttribute('data-src');
   var imageID = imageURL.substr(imageURL.lastIndexOf('/'));
 
   var xhr = new XMLHttpRequest();
