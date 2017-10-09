@@ -7,9 +7,9 @@ chrome.pageAction.onClicked.addListener(
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
     var activeTab = tabs[0];
 
-    // Check if downloading single image, album, or artist page
+    // Check if downloading single image/album cover, album, or artist page
     if (activeTab.url.includes("mode=medium&")) {
-      chrome.tabs.sendMessage(activeTab.id, {message: "image"});
+      chrome.tabs.sendMessage(activeTab.id, {message: "art"});
     }
     else if (activeTab.url.includes("mode=manga&")) {
       chrome.tabs.sendMessage(activeTab.id, {message: "album"});
@@ -74,7 +74,7 @@ chrome.runtime.onInstalled.addListener(
               queryContains: "manga&"
             }
           }),
-          // Match images
+          // Match images and album covers
           new chrome.declarativeContent.PageStateMatcher({
             pageUrl: {              
               schemes: ["http", "https"],

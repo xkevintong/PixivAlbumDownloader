@@ -10,14 +10,37 @@ chrome.runtime.onMessage.addListener(
         download_artist();
         break;
 
-      case "image":
-        download_image(document);
+      case "art":
+        download_art(document);
         break;
 
       default:
     }
   }
 );
+
+function download_art(doc) {
+  // Check if document has album page count variable to determine if page is album cover or single image
+  var numPages = doc.evaluate('//*[@id="wrapper"]/div[1]/div[1]/div/div[5]/a[1]/div/div/span', 
+          doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+  if (numPages) {
+    // Construct url for album, get document for album and pass to download_album
+    var albumURL = doc.evaluate('//*[@id="wrapper"]/div[1]/div[1]/div/div[5]/a[1]', 
+      doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href;
+    var album = new XMLHttpRequest();
+    album.responseType = "document";
+    album.open('GET', albumURL, true);
+    album.send();
+
+    album.onload = function () {
+      download_album(this.responseXML);
+    };
+  }
+  else {
+    // No page count, call download_image
+    download_image(doc);
+  }
+}
 
 function download_album(doc) {
   // Get album size and first page with XPath
@@ -35,9 +58,9 @@ function download_album(doc) {
 
   firstImage.onload = function () {
     // Get image format of the album from first image
-    var firstImageURL = this.responseXML.evaluate('/html/body/img', this.responseXML, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
+    var firstImageURL = this.responseXML.evaluate('/html/body/img', 
+      this.responseXML, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
     var imageFormat = firstImageURL.substr(firstImageURL.lastIndexOf('.'));
-
     // Edit first page URL to download url
     var firstPageURL = firstPage.replace("img-master", "img-original").replace("_master1200.jpg", imageFormat);
 
@@ -92,6 +115,17 @@ function download_artist() {
     document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 
   for (var i = 0; i < snapshot.snapshotLength; i++) {
-    console.log(snapshot.snapshotItem(i).href);
+    var url = snapshot.snapshotItem(i).href;
+    var illust = new XMLHttpRequest();
+    illust.responseType = "document";
+    illust.open('GET', url, true);
+    illust.send();
+
+    illust.onload = function () {
+      download_art(this.responseXML);
+    };
+  }
+}
+
   }
 }
