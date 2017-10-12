@@ -43,9 +43,7 @@ function download_art(doc) {
 }
 
 function download_album(doc) {
-  // Get album size and first page with XPath
-  var firstPage = doc.evaluate('//*[@id="main"]/section/div[1]/img',
-    doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
+  // Get album size with XPath
   var albumSize = doc.evaluate('/html/body/nav/div[1]/span[2]',
     doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
 
@@ -61,18 +59,16 @@ function download_album(doc) {
     var firstImageURL = this.responseXML.evaluate('/html/body/img', 
       this.responseXML, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
     var imageFormat = firstImageURL.substr(firstImageURL.lastIndexOf('.'));
-    // Edit first page URL to download url
-    var firstPageURL = firstPage.replace("img-master", "img-original").replace("_master1200.jpg", imageFormat);
 
     // Find album ID
-    var albumID = firstPageURL.substr(firstPageURL.lastIndexOf('/') + 1).replace("_p0" + imageFormat, "_p");
+    var albumID = firstImageURL.substr(firstImageURL.lastIndexOf('/') + 1).replace("_p0" + imageFormat, "_p");
 
     // Download all images with XHR blobs
     for (var page = 0; page < albumSize; page++) {
       (function(page) {
         var xhr = new XMLHttpRequest();
         xhr.responseType = "blob";
-        xhr.open('GET', firstPageURL.replace("_p0", "_p" + page), true);
+        xhr.open('GET', firstImageURL.replace("_p0", "_p" + page), true);
         xhr.send();
 
         // Assign blob response a URL and send message to background.js to download blob
