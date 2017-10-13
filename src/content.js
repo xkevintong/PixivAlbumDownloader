@@ -122,6 +122,3 @@ function download_artist() {
     };
   }
 }
-
-  }
-}
