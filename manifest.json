@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
-  "name": "Pixiv Album Downloader",
-  "version": "1.1.2",
-  "description": "Downloads an entire album of art from a Pixiv album page.",
+  "name": "Pixiv Art Downloader",
+  "version": "1.2.0",
+  "description": "Downloads art from Pixiv artists with one click! Supports artist pages, albums and single images.",
 
   "icons": {
     "48": "icons/megumin-48.png",

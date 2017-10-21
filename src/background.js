@@ -53,7 +53,7 @@ chrome.runtime.onInstalled.addListener(
       if (item.subfolder === undefined) {
         chrome.storage.sync.set({
           isSubfolder: true,
-          subfolder: "Pixiv Album Downloader"
+          subfolder: "Pixiv Art Downloader"
         });
       }
     });
