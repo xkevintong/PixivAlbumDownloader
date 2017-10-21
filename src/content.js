@@ -107,7 +107,7 @@ function download_image(doc) {
 
 function download_artist() {
   // Get snapshot of image/album links from the page
-  var snapshot = document.evaluate('//*[@id="wrapper"]//li[@class="image-item"]/a',
+  var snapshot = document.evaluate('//*[@id="wrapper"]//li[@class="image-item"]/a[0]',
     document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 
   for (var i = 0; i < snapshot.snapshotLength; i++) {
