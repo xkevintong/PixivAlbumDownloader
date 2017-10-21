@@ -44,7 +44,7 @@ function download_art(doc) {
 
 function download_album(doc) {
   // Get album size with XPath
-  var albumSize = doc.evaluate('/html/body/nav/div[1]/span[2]',
+  var albumSize = doc.evaluate('//div[@class="page"]//span[@class="total"]',
     doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent;
 
   // Check first image in album to see if it is in jpg or png format, and assume entire album is as well
@@ -86,7 +86,7 @@ function download_album(doc) {
 
 function download_image(doc) {
   // Get source image url and id
-  var imageURL = doc.evaluate('//*[@id="wrapper"]/div[2]/div/img',
+  var imageURL = doc.evaluate('//*[@id="wrapper"]//div[@class="wrapper"]/img',
     doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.getAttribute('data-src');
   var imageID = imageURL.substr(imageURL.lastIndexOf('/'));
 
@@ -107,7 +107,7 @@ function download_image(doc) {
 
 function download_artist() {
   // Get snapshot of image/album links from the page
-  var snapshot = document.evaluate('//*[@id="wrapper"]//li[@class="image-item"]/a[0]',
+  var snapshot = document.evaluate('//*[@id="wrapper"]//li[@class="image-item"]/a[1]',
     document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 
   for (var i = 0; i < snapshot.snapshotLength; i++) {
