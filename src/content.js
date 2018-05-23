@@ -21,11 +21,11 @@ chrome.runtime.onMessage.addListener(
 
 function download_art(doc) {
   // Check if document has album page count variable to determine if page is album cover or single image
-  var pagesDiv = doc.evaluate('//*[@id="wrapper"]//div[@class="page-count"]',
+  var pagesDiv = doc.evaluate('//*[@role="presentation"]//div[@class="gVu_bev"]',
     doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
   if (pagesDiv) {
-    // Construct url for album, get document for album and pass to download_album
-    var albumURL = doc.evaluate('//*[@id="wrapper"]//div[@class="works_display"]/a', 
+    // Construct url for album, get document for album and pass to download_album 
+    var albumURL = doc.evaluate('//div[@class="sticky"]/a', 
       doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href;
     var album = new XMLHttpRequest();
     album.responseType = "document";
@@ -86,9 +86,9 @@ function download_album(doc) {
 
 function download_image(doc) {
   // Get source image url and id
-  var imageURL = doc.evaluate('//*[@id="wrapper"]//div[@class="wrapper"]/img',
-    doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.getAttribute('data-src');
-  var imageID = imageURL.substr(imageURL.lastIndexOf('/'));
+  var imageURL = doc.evaluate('//*[@role="presentation"]/div[@role="presentation"]/a',
+    doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href
+  var imageID = imageURL.substr(imageURL.lastIndexOf('/') + 1);
 
   var xhr = new XMLHttpRequest();
   xhr.responseType = "blob";
