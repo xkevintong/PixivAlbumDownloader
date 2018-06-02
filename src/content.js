@@ -18,14 +18,14 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
-
+//*[@id="root"]/div[1]/div/article/div/div[1]/figure/div[1]/div[2]/a
 function download_art(doc) {
   // Check if document has album page count variable to determine if page is album cover or single image
   var pagesDiv = doc.evaluate('//*[@role="presentation"]//div[@class="gVu_bev"]',
     doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
   if (pagesDiv) {
     // Construct url for album, get document for album and pass to download_album 
-    var albumURL = doc.evaluate('//div[@class="sticky"]/a', 
+    var albumURL = doc.evaluate('//div[@role="presentation"]/div[@role="presentation"]/a', 
       doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href;
     var album = new XMLHttpRequest();
     album.responseType = "document";
