@@ -18,7 +18,7 @@ chrome.runtime.onMessage.addListener(
     }
   }
 );
-//*[@id="root"]/div[1]/div/article/div/div[1]/figure/div[1]/div[2]/a
+
 function download_art(doc) {
   // Check if document has album page count variable to determine if page is album cover or single image
   var pagesDiv = doc.evaluate('//*[@role="presentation"]//div[@class="gVu_bev"]',
