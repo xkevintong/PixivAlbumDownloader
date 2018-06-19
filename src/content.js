@@ -112,13 +112,18 @@ function download_artist() {
 
   for (var i = 0; i < snapshot.snapshotLength; i++) {
     var url = snapshot.snapshotItem(i).href;
-    var illust = new XMLHttpRequest();
-    illust.responseType = "document";
-    illust.open('GET', url, true);
-    illust.send();
 
-    illust.onload = function () {
-      download_art(this.responseXML);
-    };
+    // Check for corresponding page
+    var pages = document.evaluate('//*[@id="wrapper"]//ul[@class="_image-items"]/li[' + (i+1) + ']/a[1]/div[@class="page-count"]/span',
+    document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+
+    // Album
+    if (pages) {
+      pages = pages.innerHTML;
+    }
+    // Single image
+    else {
+
+    }
   }
 }

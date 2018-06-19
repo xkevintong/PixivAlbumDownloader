@@ -81,6 +81,14 @@ chrome.runtime.onInstalled.addListener(
               hostEquals: "www.pixiv.net",
               queryContains: "medium&"
             }
+          }),
+          // Match artist page
+          new chrome.declarativeContent.PageStateMatcher({
+            pageUrl: {
+              schemes: ["http", "https"],
+              hostEquals: "www.pixiv.net",
+              urlContains: "php?id"
+            }
           })
         ],
         actions: [new chrome.declarativeContent.ShowPageAction()]
