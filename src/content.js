@@ -105,25 +105,55 @@ function download_image(doc) {
   };
 }
 
+function download(url, id) {
+  // Send xhr request to download image
+  var xhr = new XMLHttpRequest();
+  xhr.responseType = "blob";
+  xhr.open('GET', url, true);
+  xhr.send();
+
+  // Assign blob response a URL and send message to background.js to download blob
+  xhr.onload = function () {
+    chrome.runtime.sendMessage({
+      message: "download",
+      url: URL.createObjectURL(this.response),
+      filename: id
+    });
+  };
+}
+
 function download_artist() {
   // Get snapshot of image/album links from the page
-  var snapshot = document.evaluate('//*[@id="wrapper"]//li[@class="image-item"]/a[1]',
+  var snapshot = document.evaluate('//*[@id="wrapper"]//div[@class="_layout-thumbnail"]/img',
     document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 
   for (var i = 0; i < snapshot.snapshotLength; i++) {
-    var url = snapshot.snapshotItem(i).href;
+    var url = snapshot.snapshotItem(i).src;
 
     // Check for corresponding page
     var pages = document.evaluate('//*[@id="wrapper"]//ul[@class="_image-items"]/li[' + (i+1) + ']/a[1]/div[@class="page-count"]/span',
     document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 
+    // Assume artist uses samge image format for all their art, default to jpg
+    var img_format = ".jpg";
+
     // Album
     if (pages) {
-      pages = pages.innerHTML;
+      var num_pages = pages.innerHTML;
+
     }
     // Single image
     else {
+      // Construct URL
+      var orig_url = url.replace("c/150x150/img-master", "img-original").replace("_master1200.jpg", img_format);
 
+      // Get image id (filename)
+      var imageID = orig_url.substring(orig_url.lastIndexOf('/') + 1, orig_url.length - 4) + img_format;
+
+      // Attempt to download image
+      download(orig_url, imageID);
+
+      // Image download failed, change extension and download
     }
   }
 }
