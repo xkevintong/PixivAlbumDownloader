@@ -140,7 +140,6 @@ function download(url, id, ext, retry) {
       url = url.substring(0, url.length - 4) + correct_format;
       id = id.substring(0, id.length - 4) + correct_format;
 
-      console.log("flipping " + id + " " + img_format)
       download(url, id, correct_format, true);
     }
 
@@ -190,7 +189,6 @@ function download_artist() {
       var imageID = orig_url.substring(orig_url.lastIndexOf('/') + 1, orig_url.length - 4) + img_format;
 
       // Attempt to download image
-      console.log("downloading: " + orig_url)
       download(orig_url, imageID, img_format, false);
     }
   }
