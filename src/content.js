@@ -162,12 +162,23 @@ function download_artist() {
 
     // Check for corresponding page
     var pages = document.evaluate('//*[@id="wrapper"]//ul[@class="_image-items"]/li[' + (i+1) + ']/a[1]/div[@class="page-count"]/span',
-    document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+      document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 
     // Album
     if (pages) {
-      // TODO
-      var num_pages = pages.innerHTML;
+      var album_cover_url = document.evaluate('//*[@id="wrapper"]//ul[@class="_image-items"]/li[' + (i+1) + ']/a[1]',
+        document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href;
+
+      var album_url = album_cover_url.replace("medium", "manga");
+
+      var album = new XMLHttpRequest();
+      album.responseType = "document";
+      album.open('GET', album_url, true);
+      album.send();
+
+      album.onload = function () {
+        download_album(this.responseXML);
+      }
     }
 
     // Single image
