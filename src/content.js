@@ -108,42 +108,49 @@ function download_image(doc) {
   };
 }
 
-function download(url, id) {
+function download(url, id, ext, retry) {
   // Send xhr request to download image
   var xhr = new XMLHttpRequest();
   xhr.responseType = "blob";
   xhr.open('GET', url, true);
   xhr.send();
-
-  // Assign blob response a URL and send message to background.js to download blob
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4 && xhr.status === 200) {
+  
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      // Assign blob response a URL and send message to background.js to download blob
       chrome.runtime.sendMessage({
         message: "download",
         url: URL.createObjectURL(this.response),
         filename: id
       });
     }
-    else if (xhr.status === 404) {
-      // Change extension only if its different
-      // and redownload (assumes pixiv only uses .jpg and .png formats)
+
+    else if (xhr.status === 404 && retry === false) {
+      // Get incorrect format
       var curr_format = url.substring(url.length - 4, url.length);
-      if (curr_format === img_format) {        
-        img_format = img_format === ".jpg" ? ".png" : ".jpg";
 
-        url = url.substring(0, url.length - 4) + img_format;
-        id = id.substring(0, id.length - 4) + img_format;
+      // Get correct format
+      var correct_format = curr_format === ".jpg" ? ".png" : ".jpg";
 
-        download(url, id);
-      }
+      // Set img_format to correct format (for this image)
+      // and hope it doesn't flip again
+      var img_format = correct_format;
 
-      // Uh-oh
-      else {
-        console.log("New image extension detected!");
-      }
+      // Attempt redownload with retry set to true
+      url = url.substring(0, url.length - 4) + correct_format;
+      id = id.substring(0, id.length - 4) + correct_format;
+
+      console.log("flipping " + id + " " + img_format)
+      download(url, id, correct_format, true);
+    }
+
+    // Uh-oh
+    else {
+      console.log("New extension detected!");
     }
   };
 }
+
 
 function download_artist() {
   // Get snapshot of image/album links from the page
@@ -159,6 +166,7 @@ function download_artist() {
 
     // Album
     if (pages) {
+      // TODO
       var num_pages = pages.innerHTML;
     }
 
@@ -171,7 +179,8 @@ function download_artist() {
       var imageID = orig_url.substring(orig_url.lastIndexOf('/') + 1, orig_url.length - 4) + img_format;
 
       // Attempt to download image
-      var status = download(orig_url, imageID);
+      console.log("downloading: " + orig_url)
+      download(orig_url, imageID, img_format, false);
     }
   }
 }
