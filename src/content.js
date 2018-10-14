@@ -87,9 +87,10 @@ function download_album(doc) {
   };
 }
 
+// The 'download_image' function that finds the exact source to download
 function download_image(doc) {
   // Get source image url and id
-  var imageURL = doc.evaluate('//*[@role="presentation"]//*[img]',
+  var imageURL = doc.evaluate('//body//div[@role="presentation"]/a',
     doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href
   var imageID = imageURL.substr(imageURL.lastIndexOf('/') + 1);
 
@@ -108,6 +109,8 @@ function download_image(doc) {
   };
 }
 
+
+// Another 'download_image' function that guesses extension
 function download(url, id, ext, retry) {
   // Send xhr request to download image
   var xhr = new XMLHttpRequest();
@@ -153,20 +156,21 @@ function download(url, id, ext, retry) {
 
 function download_artist() {
   // Get snapshot of image/album links from the page
-  var snapshot = document.evaluate('//*[@id="wrapper"]//div[@class="_layout-thumbnail"]/img',
+  var snapshot = document.evaluate('//*[@id="root"]//div[@class="P1uthkK"]',
     document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 
   for (var i = 0; i < snapshot.snapshotLength; i++) {
-    var thumb_url = snapshot.snapshotItem(i).src;
+    var thumb_url_temp = snapshot.snapshotItem(i).style.backgroundImage;
+    thumb_url = thumb_url_temp.substring(5, thumb_url_temp.length - 2)
 
     // Check for corresponding page
-    var pages = document.evaluate('//*[@id="wrapper"]//ul[@class="_image-items"]/li[' + (i+1) + ']/a[1]/div[@class="page-count"]/span',
+    var pages = document.evaluate('//*[@id="root"]//ul[@class="xq6AsQu KvF6Ntf"]/li[' + (i+1) + ']/div/a[1]/div[@class="_2e4DMg_"]',
       document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 
     // Album
     if (pages) {
-      var album_cover_url = document.evaluate('//*[@id="wrapper"]//ul[@class="_image-items"]/li[' + (i+1) + ']/a[1]',
-        document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href;
+      var album_cover_url = document.evaluate('//*[@id="root"]//ul[@class="xq6AsQu KvF6Ntf"]/li[' + (i+1) + ']/div/a[1]',
+      document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href;
 
       var album_url = album_cover_url.replace("medium", "manga");
 
@@ -183,7 +187,7 @@ function download_artist() {
     // Single image
     else {
       // Construct URL
-      var orig_url = thumb_url.replace("c/150x150/img-master", "img-original").replace("_master1200.jpg", img_format);
+      var orig_url = thumb_url.replace("c/250x250_80_a2/img-master", "img-original").replace("_square1200.jpg", img_format);
 
       // Get image id (filename)
       var imageID = orig_url.substring(orig_url.lastIndexOf('/') + 1, orig_url.length - 4) + img_format;
