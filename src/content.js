@@ -24,7 +24,7 @@ chrome.runtime.onMessage.addListener(
 
 function download_art(doc) {
   // Check if document has album page count variable to determine if page is album cover or single image
-  var pagesDiv = doc.evaluate('//*[@role="presentation"]//div[@class="_2uvBc97"]',
+  var pagesDiv = doc.evaluate('//*[@role="presentation"]//div[@class="css-135s1op e1vrdfyz0"]',
     doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
   if (pagesDiv) {
     // Construct url for album, get document for album and pass to download_album 
@@ -156,7 +156,7 @@ function download(url, id, ext, retry) {
 
 function download_artist() {
   // Get snapshot of image/album links from the page
-  var snapshot = document.evaluate('//*[@id="root"]//div[@class="P1uthkK"]',
+  var snapshot = document.evaluate('//*[@id="root"]//div[@class="css-1enaay6 e1qvz48i6"]',
     document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 
   for (var i = 0; i < snapshot.snapshotLength; i++) {
@@ -164,7 +164,7 @@ function download_artist() {
     thumb_url = thumb_url_temp.substring(5, thumb_url_temp.length - 2)
 
     // Check for corresponding page
-    var pages = document.evaluate('//*[@id="root"]//ul[@class="xq6AsQu KvF6Ntf"]/li[' + (i+1) + ']/div/a[1]/div[@class="_2e4DMg_"]',
+    var pages = document.evaluate('//*[@id="root"]//ul[@class="xq6AsQu KvF6Ntf"]/li[' + (i+1) + ']//span[@class="css-14gt3bc ewmz940"]',
       document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 
     // Album
