@@ -156,7 +156,7 @@ function download(url, id, ext, retry) {
 
 function download_artist() {
   // Get snapshot of image/album links from the page
-  var snapshot = document.evaluate('//*[@id="root"]//div[@class="css-1enaay6 e1qvz48i6"]',
+  var snapshot = document.evaluate('//*[@id="root"]//div[@class="css-1enaay6 e1u17rb36"]',
     document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 
   for (var i = 0; i < snapshot.snapshotLength; i++) {
