@@ -5,7 +5,7 @@ var img_format = ".jpg";
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     switch (request.message) {
-      case "album":      
+      case "album":
         download_album(document);
         break;
 
@@ -24,8 +24,9 @@ chrome.runtime.onMessage.addListener(
 
 function download_art(doc) {
   // Check if document has album page count variable to determine if page is album cover or single image
-  var pagesDiv = doc.evaluate('//*[@role="presentation"]//div[@class="css-135s1op e1vrdfyz0"]',
-    doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+  var check_if_album_xpath = '//div[@role="presentation"]//div[@class="sc-1mr081w-0 Mkpad"]'
+  var pagesDiv = doc.evaluate(check_if_album_xpath, doc, null,
+    XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
   if (pagesDiv) {
     // Construct url for album, get document for album and pass to download_album 
     var albumURL = doc.evaluate('//div[@role="presentation"]//div[@role="presentation"]/a', 
@@ -88,7 +89,10 @@ function download_album(doc) {
 }
 
 // The 'download_image' function that finds the exact source to download
+// This function was probably written before guessing extension was implemented
+// Perhaps it should be refactored?
 function download_image(doc) {
+  console.log('image')
   // Get source image url and id
   var imageURL = doc.evaluate('//body//div[@role="presentation"]/a',
     doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href
@@ -96,6 +100,7 @@ function download_image(doc) {
 
   var xhr = new XMLHttpRequest();
   xhr.responseType = "blob";
+  xhr.withCredentials = true;
   xhr.open('GET', imageURL, true);
   xhr.send();
 
@@ -155,22 +160,22 @@ function download(url, id, ext, retry) {
 
 
 function download_artist() {
-  // Get snapshot of image/album links from the page
-  var snapshot = document.evaluate('//*[@id="root"]//div[@class="css-1enaay6 e1u17rb36"]',
-    document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+  // Get snapshot of all image/album links from the page
+  var top_level_thumbnail_xpath = '//*[@id="root"]//li[@class="_1Ed7xkM"]'
+  var snapshot = document.evaluate(top_level_thumbnail_xpath, document, null,
+    XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
 
   for (var i = 0; i < snapshot.snapshotLength; i++) {
-    var thumb_url_temp = snapshot.snapshotItem(i).style.backgroundImage;
-    thumb_url = thumb_url_temp.substring(5, thumb_url_temp.length - 2)
-
-    // Check for corresponding page
-    var pages = document.evaluate('//*[@id="root"]//ul[@class="xq6AsQu KvF6Ntf"]/li[' + (i+1) + ']//span[@class="css-14gt3bc ewmz940"]',
-      document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    // Check if the current thumbnail is an image or an album
+    var check_if_album_thumbnail_xpath = './/span[@class="e7kpnw-0 gleKuB"]'
+    var pages = document.evaluate(check_if_album_thumbnail_xpath,
+      snapshot.snapshotItem(i), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
 
     // Album
     if (pages) {
-      var album_cover_url = document.evaluate('//*[@id="root"]//ul[@class="xq6AsQu KvF6Ntf"]/li[' + (i+1) + ']/div/a[1]',
-      document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href;
+      var album_cover_xpath = './/a[@class="sc-bdVaJa dfLcYX"]'
+      var album_cover_url = document.evaluate(album_cover_xpath, snapshot.snapshotItem(i),
+        null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href;
 
       var album_url = album_cover_url.replace("medium", "manga");
 
@@ -186,8 +191,14 @@ function download_artist() {
 
     // Single image
     else {
+      var thumbnail_url_xpath = './/div[@class="rp5asc-11 jxvrAm"]/img'
+      var thumb_url = document.evaluate(thumbnail_url_xpath, snapshot.snapshotItem(i),
+        null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
+      console.log(thumb_url)
+
       // Construct URL
       var orig_url = thumb_url.replace("c/250x250_80_a2/img-master", "img-original").replace("_square1200.jpg", img_format);
+      console.log(orig_url)
 
       // Get image id (filename)
       var imageID = orig_url.substring(orig_url.lastIndexOf('/') + 1, orig_url.length - 4) + img_format;
