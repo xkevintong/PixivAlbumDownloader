@@ -92,7 +92,6 @@ function download_album(doc) {
 // This function was probably written before guessing extension was implemented
 // Perhaps it should be refactored?
 function download_image(doc) {
-  console.log('image')
   // Get source image url and id
   var imageURL = doc.evaluate('//body//div[@role="presentation"]/a',
     doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href
@@ -173,7 +172,7 @@ function download_artist() {
 
     // Album
     if (pages) {
-      var album_cover_xpath = './/a[@class="sc-bdVaJa dfLcYX"]'
+      var album_cover_xpath = './/a[@class="sc-bdVaJa kxJtVr"]'
       var album_cover_url = document.evaluate(album_cover_xpath, snapshot.snapshotItem(i),
         null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href;
 
@@ -191,14 +190,12 @@ function download_artist() {
 
     // Single image
     else {
-      var thumbnail_url_xpath = './/div[@class="rp5asc-11 jxvrAm"]/img'
+      var thumbnail_url_xpath = './/div[@class="rp5asc-12 gDggns"]/img'
       var thumb_url = document.evaluate(thumbnail_url_xpath, snapshot.snapshotItem(i),
         null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
-      console.log(thumb_url)
 
       // Construct URL
       var orig_url = thumb_url.replace("c/250x250_80_a2/img-master", "img-original").replace("_square1200.jpg", img_format);
-      console.log(orig_url)
 
       // Get image id (filename)
       var imageID = orig_url.substring(orig_url.lastIndexOf('/') + 1, orig_url.length - 4) + img_format;
