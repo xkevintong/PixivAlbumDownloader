@@ -11,6 +11,9 @@ chrome.pageAction.onClicked.addListener(
     if (activeTab.url.includes("mode=medium&")) {
       chrome.tabs.sendMessage(activeTab.id, {message: "art"});
     }
+    else if (activeTab.url.includes("mode=manga_big&")) {
+      chrome.tabs.sendMessage(activeTab.id, {message: "album image"});
+    }
     else if (activeTab.url.includes("mode=manga&")) {
       chrome.tabs.sendMessage(activeTab.id, {message: "album"});
     }
@@ -66,28 +69,12 @@ chrome.runtime.onInstalled.addListener(
     chrome.declarativeContent.onPageChanged.removeRules(undefined, function() {
       chrome.declarativeContent.onPageChanged.addRules([{
         conditions: [
-          // Match albums
-          new chrome.declarativeContent.PageStateMatcher({
-            pageUrl: {              
-              schemes: ["http", "https"],
-              hostEquals: "www.pixiv.net",
-              queryContains: "manga&"
-            }
-          }),
-          // Match images and album covers
-          new chrome.declarativeContent.PageStateMatcher({
-            pageUrl: {              
-              schemes: ["http", "https"],
-              hostEquals: "www.pixiv.net",
-              queryContains: "medium&"
-            }
-          }),
-          // Match artist page
+          // Match all pages with art
           new chrome.declarativeContent.PageStateMatcher({
             pageUrl: {
               schemes: ["http", "https"],
               hostEquals: "www.pixiv.net",
-              urlContains: "php?id"
+              urlContains: "member_illust.php"
             }
           })
         ],

@@ -9,6 +9,10 @@ chrome.runtime.onMessage.addListener(
         download_album(document);
         break;
 
+      case "album image":
+        download_album_image();
+        break;
+
       case "artist":
         download_artist();
         break;
@@ -86,6 +90,15 @@ function download_album(doc) {
       }(page));
     }
   };
+}
+
+// Downloads an expanded album image
+function download_album_image() {
+  var imageURL = document.evaluate('//body/img', document, null,
+    XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src
+  var imageID = imageURL.substr(imageURL.lastIndexOf('/') + 1)
+
+  download(imageURL, imageID, imageID.slice(-4), false)
 }
 
 // The 'download_image' function that finds the exact source to download
