@@ -8,16 +8,10 @@ chrome.pageAction.onClicked.addListener(
     var activeTab = tabs[0];
 
     // Check if downloading single image/album cover, album, or artist page
-    if (activeTab.url.includes("mode=medium&")) {
+    if (activeTab.url.includes("member_illust")) {
       chrome.tabs.sendMessage(activeTab.id, {message: "art"});
     }
-    else if (activeTab.url.includes("mode=manga_big&")) {
-      chrome.tabs.sendMessage(activeTab.id, {message: "album image"});
-    }
-    else if (activeTab.url.includes("mode=manga&")) {
-      chrome.tabs.sendMessage(activeTab.id, {message: "album"});
-    }
-    else if (activeTab.url.includes("php?id")) {
+    else if (activeTab.url.includes("member")) {
       chrome.tabs.sendMessage(activeTab.id, {message: "artist"});
     }
   });
@@ -74,7 +68,7 @@ chrome.runtime.onInstalled.addListener(
             pageUrl: {
               schemes: ["http", "https"],
               hostEquals: "www.pixiv.net",
-              urlContains: "member_illust.php"
+              urlContains: "member"
             }
           })
         ],
