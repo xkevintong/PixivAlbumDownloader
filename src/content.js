@@ -74,14 +74,13 @@ function download_art(doc) {
   var check_if_album_xpath = '//div[@role="presentation"]//div[@class="sc-LzLvM hUlxx"]'
   var pagesDiv = doc.evaluate(check_if_album_xpath, doc, null,
     XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
-  if (pagesDiv) {
-    console.log("album")
-    var numPages = parseInt(pagesDiv.textContent.split('/')[1])
-    var firstImageURL = doc.evaluate('//body//div[@role="presentation"]/a',
-    doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href
-    var imageFormat = firstImageURL.substr(firstImageURL.lastIndexOf('.'))
-    // var albumID = firstImageURL.substr(firstImageURL.lastIndexOf('/') + 1).replace("_p0" + imageFormat, "_p")
 
+  var firstImageURL = doc.evaluate('//body//div[@role="presentation"]/a',
+  doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href
+  var imageFormat = firstImageURL.substr(firstImageURL.lastIndexOf('.'))
+
+  if (pagesDiv) {
+    var numPages = parseInt(pagesDiv.textContent.split('/')[1])
     for (var page = 0; page < numPages; page++) {
       imageURL = firstImageURL.replace("_p0", "_p" + page)
       imageID = imageURL.substr(firstImageURL.lastIndexOf('/') + 1)
@@ -90,8 +89,8 @@ function download_art(doc) {
   }
   else {
     // No page count element, so get single image and download
-    console.log("image")
-    download_image(doc);
+    imageID = firstImageURL.substr(firstImageURL.lastIndexOf('/') + 1)
+    download(firstImageURL, imageID, imageID.slice(-4), false)
   }
 }
 
@@ -136,87 +135,4 @@ function download(url, id, ext, retry) {
       console.log("New extension detected!");
     }
   };
-}
-
-// older code
-// The 'download_image' function that finds the exact source to download
-// This function was probably written before guessing extension was implemented
-// Perhaps it should be refactored?
-function download_image(doc) {
-  // Get source image url and id
-  var imageURL = doc.evaluate('//body//div[@role="presentation"]/a',
-    doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href
-  var imageID = imageURL.substr(imageURL.lastIndexOf('/') + 1);
-
-  var xhr = new XMLHttpRequest();
-  xhr.responseType = "blob";
-  xhr.withCredentials = true;
-  xhr.open('GET', imageURL, true);
-  xhr.send();
-
-  // Assign blob response a URL and send message to background.js to download blob
-  xhr.onload = function () {
-    chrome.runtime.sendMessage({
-      message: "download",
-      url: URL.createObjectURL(this.response),
-      filename: imageID
-    });
-  };
-}
-
-function download_album(doc) {
-  // Don't need album size anymore
-  // Just grab everything from this XPath
-  // Doesn't work until album is opened, so still have to guess I think
-  imagesXPath = '//div[@role="presentation"]/a[img[@class="sc-1qpw8k9-1 jgWNBV"]]'
-
-  // Get album size with XPath
-  albumSizeXPath = '//div[@role="presentation"]//div[@class="sc-1mr081w-0 Mkpad"]'
-  var albumSize = doc.evaluate(albumSizeXPath, doc, null,
-    XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.textContent.split('/')[1];
-
-  // Check first image in album to see if it is in jpg or png format, and assume entire album is as well
-  var firstImage = new XMLHttpRequest();
-  firstImage.responseType = "document";
-  firstImage.open('GET', doc.evaluate('//*[@id="main"]/section/div[1]/a',
-    doc, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.href, true);
-  firstImage.send();
-
-  firstImage.onload = function () {
-    // Get image format of the album from first image
-    var firstImageURL = this.responseXML.evaluate('/html/body/img', 
-      this.responseXML, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src;
-    var imageFormat = firstImageURL.substr(firstImageURL.lastIndexOf('.'));
-
-    // Find album ID
-    var albumID = firstImageURL.substr(firstImageURL.lastIndexOf('/') + 1).replace("_p0" + imageFormat, "_p");
-
-    // Download all images with XHR blobs
-    for (var page = 0; page < albumSize; page++) {
-      (function(page) {
-        var xhr = new XMLHttpRequest();
-        xhr.responseType = "blob";
-        xhr.open('GET', firstImageURL.replace("_p0", "_p" + page), true);
-        xhr.send();
-
-        // Assign blob response a URL and send message to background.js to download blob
-        xhr.onload = function () {
-          chrome.runtime.sendMessage({
-            message: "download",
-            url: URL.createObjectURL(this.response),
-            filename: albumID + page + imageFormat
-          });
-        };
-      }(page));
-    }
-  };
-}
-
-// Downloads an expanded album image
-function download_album_image() {
-  var imageURL = document.evaluate('//body/img', document, null,
-    XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue.src
-  var imageID = imageURL.substr(imageURL.lastIndexOf('/') + 1)
-
-  download(imageURL, imageID, imageID.slice(-4), false)
 }
