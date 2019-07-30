@@ -5,43 +5,43 @@ chrome.pageAction.onClicked.addListener(
   function(tab) {
   // Send a message to the active tab
   chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-    var activeTab = tabs[0];
+    var activeTab = tabs[0]
 
     // Check if downloading single image/album cover, album, or artist page
-    if (activeTab.url.includes("member_illust")) {
-      chrome.tabs.sendMessage(activeTab.id, {message: "art"});
+    if (activeTab.url.includes("illust_id")) {
+      chrome.tabs.sendMessage(activeTab.id, {message: "art"})
     }
     else if (activeTab.url.includes("member")) {
-      chrome.tabs.sendMessage(activeTab.id, {message: "artist"});
+      chrome.tabs.sendMessage(activeTab.id, {message: "artist"})
     }
-  });
-});
+  })
+})
 
 // Called when message is sent from content.js
 chrome.runtime.onMessage.addListener(
   function(request, sender, sendResponse) {
     if( request.message === "download" ) {
         chrome.storage.sync.get(['isSubfolder', 'subfolder'], function(items) {
-          var subfolder = items.subfolder;
+          var subfolder = items.subfolder
 
           // Remove subfolder if checkbox is not checked
           if (!items.isSubfolder) {
-            subfolder = "";
+            subfolder = ""
           }
 
           // Add backslash for subfolder path if there is one
           else if (subfolder) {
-            subfolder = subfolder + "/";
+            subfolder = subfolder + "/"
           }
 
           // Download image
           chrome.downloads.download({
           url: request.url,
           filename: subfolder + request.filename
-      });
-    });
+      })
+    })
   }
-});
+})
 
 // Sets subfolder to default "Pixiv Album Downloader" on extension installation
 chrome.runtime.onInstalled.addListener(
@@ -51,11 +51,11 @@ chrome.runtime.onInstalled.addListener(
         chrome.storage.sync.set({
           isSubfolder: true,
           subfolder: "Pixiv Art Downloader"
-        });
+        })
       }
-    });
+    })
   }
-);
+)
 
 // Enables the extension only on pixiv.net album pages by showing page action
 chrome.runtime.onInstalled.addListener(
@@ -73,7 +73,7 @@ chrome.runtime.onInstalled.addListener(
           })
         ],
         actions: [new chrome.declarativeContent.ShowPageAction()]
-      }]);
-    });
+      }])
+    })
   }
-);
+)
