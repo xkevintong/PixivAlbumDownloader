@@ -26,11 +26,11 @@ function download_artist() {
     XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
 
   for (var i = 0; i < snapshot.snapshotLength; i++) {
-    var pages_xpath = './/span[@class="sc-fzXfMv bAzGIH"]'
+    var pages_xpath = './/span[@class="sc-fzXfNS bAzGIF"]'
     var pages_div = document.evaluate(pages_xpath,
       snapshot.snapshotItem(i), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
 
-    var thumbnail_xpath = './/img[@class="sc-fzXfNk fUWQAK"]'
+    var thumbnail_xpath = './/img[@class="sc-fzXfPe kfVsju"]'
     var thumbnail_url = document.evaluate(thumbnail_xpath,
       snapshot.snapshotItem(i), null, XPathResult.FIRST_ORDERED_NODE_TYPE,
       null).singleNodeValue.src
@@ -59,7 +59,7 @@ function download_artist() {
 // Downloads an image or an album
 function download_art(doc) {
   // Check if document has album page count variable to determine if page is album cover or single image
-  var pages_xpath = '//div[@role="presentation"]//div[@class="sc-LzLvM hUlxx"]'
+  var pages_xpath = '//div[@role="presentation"]//div[@class="sc-LzLvO fiwKTr"]'
   var pagesDiv = doc.evaluate(pages_xpath, doc, null,
     XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
 
@@ -68,6 +68,7 @@ function download_art(doc) {
   var imageFormat = firstImageURL.substr(firstImageURL.lastIndexOf('.'))
 
   if (pagesDiv) {
+    // numPages format is '1/total_pages'
     var numPages = parseInt(pagesDiv.textContent.split('/')[1])
     for (var page = 0; page < numPages; page++) {
       imageURL = firstImageURL.replace("_p0", "_p" + page)
