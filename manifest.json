@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Pixiv Art Downloader",
-  "version": "1.2.6",
+  "version": "1.2.7",
   "description": "Downloads art from Pixiv artists with one click! Supports albums and single images.",
 
   "icons": {

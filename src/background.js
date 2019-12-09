@@ -8,7 +8,7 @@ chrome.pageAction.onClicked.addListener(
     var activeTab = tabs[0]
 
     // Check if downloading single image/album cover, album, or artist page
-    if (activeTab.url.includes("illust_id")) {
+    if (activeTab.url.includes("artworks")) {
       chrome.tabs.sendMessage(activeTab.id, {message: "art"})
     }
     else if (activeTab.url.includes("member")) {
@@ -68,7 +68,6 @@ chrome.runtime.onInstalled.addListener(
             pageUrl: {
               schemes: ["http", "https"],
               hostEquals: "www.pixiv.net",
-              urlContains: "member"
             }
           })
         ],

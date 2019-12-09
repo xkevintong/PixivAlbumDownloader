@@ -26,11 +26,11 @@ function download_artist() {
     XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
 
   for (var i = 0; i < snapshot.snapshotLength; i++) {
-    var pages_xpath = './/span[@class="sc-fzXfNS bAzGIF"]'
+    var pages_xpath = './/span[@class="sc-fzXfOw bAzGJW"]'
     var pages_div = document.evaluate(pages_xpath,
       snapshot.snapshotItem(i), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
 
-    var thumbnail_xpath = './/img[@class="sc-fzXfPe kfVsju"]'
+    var thumbnail_xpath = './/img[@class="sc-fzXfPJ lclRkv"]'
     var thumbnail_url = document.evaluate(thumbnail_xpath,
       snapshot.snapshotItem(i), null, XPathResult.FIRST_ORDERED_NODE_TYPE,
       null).singleNodeValue.src
@@ -59,7 +59,7 @@ function download_artist() {
 // Downloads an image or an album
 function download_art(doc) {
   // Check if document has album page count variable to determine if page is album cover or single image
-  var pages_xpath = '//div[@role="presentation"]//div[@class="sc-LzLvO fiwKTr"]'
+  var pages_xpath = '//div[@role="presentation"]//div[@class="sc-LzMDV gKYlmR"]'
   var pagesDiv = doc.evaluate(pages_xpath, doc, null,
     XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
 
