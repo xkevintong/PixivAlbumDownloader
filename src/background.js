@@ -8,12 +8,13 @@ chrome.pageAction.onClicked.addListener(
     var activeTab = tabs[0]
 
     // Check if downloading single image/album cover, album, or artist page
-    if (activeTab.url.includes("artworks")) {
-      chrome.tabs.sendMessage(activeTab.id, {message: "art"})
-    }
-    else if (activeTab.url.includes("member")) {
+    if (activeTab.url.includes("users")) {
       chrome.tabs.sendMessage(activeTab.id, {message: "artist"})
     }
+    else if (activeTab.url.includes("artworks")) {
+      chrome.tabs.sendMessage(activeTab.id, {message: "art"})
+    }
+
   })
 })
 

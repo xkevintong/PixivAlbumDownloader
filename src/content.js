@@ -26,19 +26,26 @@ function download_artist() {
     XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null)
 
   for (var i = 0; i < snapshot.snapshotLength; i++) {
-    var pages_xpath = './/span[@class="sc-fzXfOX bAzGJr"]'
+    var pages_xpath = './/div/span[text()]'
     var pages_div = document.evaluate(pages_xpath,
       snapshot.snapshotItem(i), null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
 
-    var thumbnail_xpath = './/img[@class="sc-fzXfPM iwqMqq"]'
+    var thumbnail_xpath = './/img'
     var thumbnail_url = document.evaluate(thumbnail_xpath,
       snapshot.snapshotItem(i), null, XPathResult.FIRST_ORDERED_NODE_TYPE,
       null).singleNodeValue.src
 
     // Calculate source url for first page from thumbnail
-    firstImageURL = thumbnail_url
-    .replace("c/250x250_80_a2/img-master", "img-original")
-    .replace("_square1200.jpg", img_format)
+    if (thumbnail_url.includes('img-master')) {
+      firstImageURL = thumbnail_url
+      .replace("c/250x250_80_a2/img-master", "img-original")
+      .replace("_square1200.jpg", img_format)
+    }
+    else {
+      firstImageURL = thumbnail_url
+      .replace("c/250x250_80_a2/custom-thumb", "img-original")
+      .replace("_custom1200.jpg", img_format)
+    }
 
     // If pages_div exists the thumbnail represents an album
     if (pages_div) {
@@ -59,7 +66,7 @@ function download_artist() {
 // Downloads an image or an album
 function download_art(doc) {
   // Check if document has album page count variable to determine if page is album cover or single image
-  var pages_xpath = '//div[@role="presentation"]//div[@class="sc-LzMjO hpNTgI"]'
+  var pages_xpath = '//div[@role="presentation"]//div[@aria-label="Preview"]/div'
   var pagesDiv = doc.evaluate(pages_xpath, doc, null,
     XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue
 

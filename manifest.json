@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Pixiv Art Downloader",
-  "version": "1.2.8",
+  "version": "1.2.12",
   "description": "Downloads art from Pixiv artists with one click! Supports albums and single images.",
 
   "icons": {
@@ -38,9 +38,9 @@
     "downloads",
     "notifications",
     "storage",
-    "tabs",
     "*://www.pixiv.net/*",
-    "*://i.pximg.net/*"
+    "*://i.pximg.net/*",
+    "*://i-f.pximg.net/*"
   ],
 
   "commands": {
